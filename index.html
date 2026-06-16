@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Simulation Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f0f7ff;
+        }
+        .heading-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .cro-screen {
+            background-color: #0d1b10;
+            box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.4);
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 text-gray-800">
+
+    <header class="max-w-6xl mx-auto bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 rounded-3xl p-6 shadow-xl mb-6 border-4 border-white flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="text-center sm:text-left">
+            <h1 class="heading-font text-3xl md:text-4xl text-white font-bold drop-shadow-md tracking-wide" id="main-title">
+                ⚡ Physics Lab Simulator
+            </h1>
+            <p class="text-white text-sm font-semibold opacity-95 mt-1" id="main-subtitle">
+                Interactive Experiments for High School Physics
+            </p>
+        </div>
+        <button onclick="toggleLanguage()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md border-2 border-white transform active:scale-95 transition cursor-pointer flex items-center gap-2">
+            🌐 <span id="lang-btn-text">Bahasa Melayu</span>
+        </button>
+    </header>
+
+    <nav class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+        <button onclick="switchTab(1)" id="tab1" class="heading-font font-bold p-3 rounded-2xl border-b-4 transition text-sm md:text-base cursor-pointer bg-cyan-400 border-cyan-600 text-white shadow-md">
+            1. Electron Gun
+        </button>
+        <button onclick="switchTab(2)" id="tab2" class="heading-font font-bold p-3 rounded-2xl border-b-4 transition text-sm md:text-base cursor-pointer bg-white border-gray-300 text-gray-600 hover:bg-gray-50">
+            2. Semiconductor Doping
+        </button>
+        <button onclick="switchTab(3)" id="tab3" class="heading-font font-bold p-3 rounded-2xl border-b-4 transition text-sm md:text-base cursor-pointer bg-white border-gray-300 text-gray-600 hover:bg-gray-50">
+            3. P-N Junction Bias
+        </button>
+        <button onclick="switchTab(4)" id="tab4" class="heading-font font-bold p-3 rounded-2xl border-b-4 transition text-sm md:text-base cursor-pointer bg-white border-gray-300 text-gray-600 hover:bg-gray-50">
+            4. Diode Rectifier
+        </button>
+    </nav>
+
+    <main class="max-w-6xl mx-auto">
+
+        <section id="sim1" class="bg-white rounded-3xl p-4 md:p-6 shadow-xl border-4 border-cyan-400">
+            <h2 class="heading-font text-2xl font-bold text-cyan-600 mb-4 flex items-center gap-2">
+                📺 <span data-key="sim1_title">Electron Gun & Maltese Cross Tube</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-4 bg-cyan-50 p-4 rounded-2xl border-2 border-cyan-200 flex flex-col gap-4">
+                    <h3 class="font-bold text-cyan-800" data-key="controls">Controls</h3>
+                    
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">
+                            <span data-key="anode_voltage">Anode Voltage (EHT)</span>: <span id="v1-val" class="text-cyan-600 font-bold">3</span> kV
+                        </label>
+                        <input type="range" id="sim1-v" min="1" max="6" step="0.5" value="3" oninput="updateSim1()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700" data-key="field_select">Deflection Field</label>
+                        <div class="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl border border-gray-200">
+                            <button onclick="setField('none')" id="f-none" class="py-2 text-xs font-bold rounded-lg cursor-pointer bg-cyan-500 text-white">None</button>
+                            <button onclick="setField('magnetic')" id="f-mag" class="py-2 text-xs font-bold rounded-lg cursor-pointer bg-gray-100 text-gray-600 hover:bg-gray-200">Magnetic</button>
+                            <button onclick="setField('electric')" id="f-elec" class="py-2 text-xs font-bold rounded-lg cursor-pointer bg-gray-100 text-gray-600 hover:bg-gray-200">Electric</button>
+                        </div>
+                    </div>
+
+                    <div id="field-polarity-container" class="hidden">
+                        <label class="block font-semibold text-sm mb-1 text-gray-700" id="field-direction-label" data-key="polarity">Direction / Polarity</label>
+                        <select id="sim1-dir" onchange="updateSim1()" class="w-full bg-white border border-gray-300 rounded-xl p-2 text-sm font-semibold">
+                            </select>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl border border-cyan-200 text-xs text-gray-600 leading-relaxed shadow-inner overflow-y-auto max-h-48" id="sim1-explanation">
+                        </div>
+                </div>
+
+                <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 rounded-2xl p-3 border-2 border-slate-700 flex flex-col items-center justify-between min-h-[300px]">
+                        <span class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-1" data-key="tube_view">Maltese Cross Tube Vacuum Chamber</span>
+                        <div class="w-full flex-grow relative flex items-center justify-center">
+                            <canvas id="canvas-tube" class="w-full h-full max-h-[240px] rounded-xl bg-slate-950"></canvas>
+                        </div>
+                    </div>
+                    <div class="cro-screen rounded-2xl p-3 border-4 border-slate-600 flex flex-col items-center justify-between min-h-[300px]">
+                        <span class="text-xs font-bold text-green-400 tracking-wider uppercase mb-1" data-key="cro_view">CRO Screen Target View</span>
+                        <div class="w-full flex-grow relative flex items-center justify-center">
+                            <canvas id="canvas-cro" class="w-full h-full max-h-[240px] rounded-xl"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sim2" class="bg-white rounded-3xl p-4 md:p-6 shadow-xl border-4 border-emerald-400 hidden">
+            <h2 class="heading-font text-2xl font-bold text-emerald-600 mb-4 flex items-center gap-2">
+                🧪 <span data-key="sim2_title">Semiconductor Crystal Doping Lattice</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-4 bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 flex flex-col gap-4">
+                    <h3 class="font-bold text-emerald-800" data-key="controls">Controls</h3>
+                    
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700" data-key="doping_select">Select Dopant Element</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setDopant('trivalent')" id="d-tri" class="py-3 px-2 text-xs font-bold rounded-xl border-2 border-emerald-500 bg-emerald-500 text-white cursor-pointer transition">
+                                💠 Trivalent (Boron / Indium)
+                            </button>
+                            <button onclick="setDopant('pentavalent')" id="d-penta" class="py-3 px-2 text-xs font-bold rounded-xl border-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50 cursor-pointer transition">
+                                ⚛️ Pentavalent (Phosphorus)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-inner flex-grow">
+                        <h4 class="font-bold text-sm text-emerald-700 mb-2" id="sim2-type-header">P-Type Semiconductor</h4>
+                        <div class="text-xs text-gray-600 leading-relaxed flex flex-col gap-2" id="sim2-explanation">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-slate-900 rounded-2xl p-4 border-2 border-slate-700 flex flex-col items-center">
+                    <div class="w-full flex justify-between items-center mb-3 text-xs font-bold text-slate-400 px-2">
+                        <span data-key="lattice_view">Atomic Covalent Bond Matrix</span>
+                        <div class="flex gap-4">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span> e⁻ (Electron)</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Hole</span>
+                        </div>
+                    </div>
+                    <div class="w-full max-w-[500px] aspect-square relative bg-slate-950 rounded-xl overflow-hidden p-2">
+                        <canvas id="canvas-lattice" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sim3" class="bg-white rounded-3xl p-4 md:p-6 shadow-xl border-4 border-amber-400 hidden">
+            <h2 class="heading-font text-2xl font-bold text-amber-600 mb-4 flex items-center gap-2">
+                🪫 <span data-key="sim3_title">P-N Junction & Diode Biasing Circuit</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-4 bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 flex flex-col gap-4">
+                    <h3 class="font-bold text-amber-800" data-key="controls">Controls</h3>
+
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700" data-key="battery_polarity">Battery Alignment (Polarity)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setBiasPolarity('forward')" id="b-fwd" class="py-3 px-2 text-xs font-bold rounded-xl border-2 border-amber-500 bg-amber-500 text-white cursor-pointer transition">
+                                ➡️ Forward Bias
+                            </button>
+                            <button onclick="setBiasPolarity('reverse')" id="b-rev" class="py-3 px-2 text-xs font-bold rounded-xl border-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50 cursor-pointer transition">
+                                ⬅️ Reverse Bias
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-inner flex-grow">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm text-amber-700" id="sim3-bias-header">Forward Bias</h4>
+                            <span id="sim3-bulb-status" class="px-2 py-0.5 text-xs font-black rounded-md uppercase tracking-wider"> Bulb ON </span>
+                        </div>
+                        <div class="text-xs text-gray-600 leading-relaxed" id="sim3-explanation">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-slate-900 rounded-2xl p-4 border-2 border-slate-700 flex flex-col items-center justify-between min-h-[360px]">
+                    <span class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-2" data-key="junction_circuit">Junction Depletion Layer Circuit Real-time State</span>
+                    <div class="w-full flex-grow relative flex items-center justify-center">
+                        <canvas id="canvas-junction" class="w-full h-full max-h-[320px] rounded-xl bg-slate-950"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sim4" class="bg-white rounded-3xl p-4 md:p-6 shadow-xl border-4 border-rose-400 hidden">
+            <h2 class="heading-font text-2xl font-bold text-rose-600 mb-4 flex items-center gap-2">
+                🎛️ <span data-key="sim4_title">Full-Wave Bridge Rectifier Configuration</span>
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-6 bg-rose-50 p-4 rounded-2xl border-2 border-rose-200 flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-rose-800" data-key="bridge_config">Bridge Network Setup</h3>
+                        <button onclick="resetDiodes()" class="bg-white text-gray-700 font-bold text-xs px-3 py-1.5 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer shadow-sm">
+                            🔄 Reset
+                        </button>
+                    </div>
+
+                    <p class="text-xs text-gray-600" data-key="rectifier_instruction">
+                        Tap any of the 4 diodes below to reverse its direction. Align them correctly to achieve full-wave rectification!
+                    </p>
+
+                    <div class="bg-slate-950 rounded-2xl p-4 relative border-2 border-slate-800 flex items-center justify-center min-h-[260px] select-none">
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 20 130 L 100 130 L 100 70 M 100 130 L 100 190" stroke="#f43f5e" stroke-width="3" fill="none" stroke-dasharray="4"/>
+                            <path d="M 480 130 L 400 130 L 400 70 M 400 130 L 400 190" stroke="#f43f5e" stroke-width="3" fill="none" stroke-dasharray="4"/>
+                            <path d="M 100 70 L 250 20 L 400 70 M 100 190 L 250 240 L 400 190" stroke="#cbd5e1" stroke-width="4" fill="none"/>
+                            <path d="M 250 20 L 250 50" stroke="#38bdf8" stroke-width="3" fill="none"/>
+                            <path d="M 250 240 L 250 210" stroke="#38bdf8" stroke-width="3" fill="none"/>
+                        </svg>
+
+                        <div class="absolute left-2 text-rose-400 font-bold text-xs uppercase bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700">AC ~</div>
+                        <div class="absolute right-2 text-rose-400 font-bold text-xs uppercase bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700">AC ~</div>
+
+                        <div class="absolute top-1 text-sky-400 font-bold text-xs bg-slate-900 px-2 rounded border border-slate-700">DC (+)</div>
+                        <div class="absolute bottom-1 text-sky-400 font-bold text-xs bg-slate-900 px-2 rounded border border-slate-700">DC (-)</div>
+
+                        <div onclick="rotateDiode(1)" id="diode-1" class="absolute transform -translate-x-16 -translate-y-12 w-14 h-14 bg-slate-800 hover:bg-slate-700 active:scale-95 border-2 border-slate-600 rounded-xl flex flex-col justify-center items-center cursor-pointer text-white transition shadow-md">
+                            <span class="text-xs font-bold text-gray-400">D1</span>
+                            <span class="text-xl font-bold tracking-tighter" id="d1-icon">▶|</span>
+                        </div>
+                        <div onclick="rotateDiode(2)" id="diode-2" class="absolute transform translate-x-16 -translate-y-12 w-14 h-14 bg-slate-800 hover:bg-slate-700 active:scale-95 border-2 border-slate-600 rounded-xl flex flex-col justify-center items-center cursor-pointer text-white transition shadow-md">
+                            <span class="text-xs font-bold text-gray-400">D2</span>
+                            <span class="text-xl font-bold tracking-tighter" id="d2-icon">▶|</span>
+                        </div>
+                        <div onclick="rotateDiode(3)" id="diode-3" class="absolute transform -translate-x-16 translate-y-12 w-14 h-14 bg-slate-800 hover:bg-slate-700 active:scale-95 border-2 border-slate-600 rounded-xl flex flex-col justify-center items-center cursor-pointer text-white transition shadow-md">
+                            <span class="text-xs font-bold text-gray-400">D3</span>
+                            <span class="text-xl font-bold tracking-tighter" id="d3-icon">▶|</span>
+                        </div>
+                        <div onclick="rotateDiode(4)" id="diode-4" class="absolute transform translate-x-16 translate-y-12 w-14 h-14 bg-slate-800 hover:bg-slate-700 active:scale-95 border-2 border-slate-600 rounded-xl flex flex-col justify-center items-center cursor-pointer text-white transition shadow-md">
+                            <span class="text-xs font-bold text-gray-400">D4</span>
+                            <span class="text-xl font-bold tracking-tighter" id="d4-icon">▶|</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 flex flex-col gap-4">
+                    <div class="cro-screen rounded-2xl p-4 border-4 border-slate-600 flex flex-col items-center justify-between min-h-[240px]">
+                        <span class="text-xs font-bold text-green-400 tracking-wider uppercase mb-2" id="sim4-cro-header">CRO Display Waveform Result</span>
+                        <div class="w-full flex-grow relative flex items-center justify-center">
+                            <canvas id="canvas-rectifier-cro" class="w-full h-full max-h-[200px] rounded-xl"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-inner">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span id="rect-status-badge" class="px-2 py-0.5 text-xs font-black rounded-md text-white"></span>
+                            <h4 class="font-bold text-sm text-gray-800" id="rect-analysis-title">Analyzing Configuration...</h4>
+                        </div>
+                        <p class="text-xs text-gray-600 leading-relaxed" id="sim4-explanation"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-6xl mx-auto text-center mt-8 pb-8 text-xs font-semibold text-slate-400 tracking-wider">
+        MRSM GERIK PHYSICS DEPT © 2026 • DESIGNED FOR HIGH PERFORMANCE INTERACTIVE EDUCATION
+    </footer>
+
+    <script>
+        // BILINGUAL RESOURCE TRANSLATION DICTIONARY
+        const langData = {
+            en: {
+                main_title: "⚡ Physics Lab Simulator",
+                main_subtitle: "Interactive Experiments for High School Physics",
+                tab1: "1. Electron Gun",
+                tab2: "2. Semiconductor Doping",
+                tab3: "3. P-N Junction Bias",
+                tab4: "4. Diode Rectifier",
+                controls: "Lab Parameters Control",
+                anode_voltage: "Anode Voltage (EHT)",
+                field_select: "Deflection Field Environment",
+                polarity: "Field Orientation / Polarities",
+                tube_view: "Maltese Cross Tube Vacuum Chamber",
+                cro_view: "CRO Screen Target View",
+                doping_select: "Select Semiconductor Dopant",
+                lattice_view: "Atomic Covalent Bond Matrix View",
+                battery_polarity: "External Circuit Battery Polarity",
+                junction_circuit: "Junction Depletion Layer Circuit State",
+                bridge_config: "Bridge Diode Orientation Tool Network",
+                rectifier_instruction: "Tap/Click individual diode modules to reverse their current blocking/flow alignment configuration.",
+                cro_rect_title: "Oscilloscope Waveform Display Output",
+                
+                // Sim 1 Explanations
+                s1_desc_none: "Thermionic emission at the hot cathode releases high-speed electrons. Accelerated by the high positive voltage of the anode (EHT), they form a cathode ray traveling in a straight line. The shadow of the metal Maltese cross is projected directly onto the fluorescent screen, causing a bright green glow around it.",
+                s1_desc_mag_up: "Magnetic Field Applied (North on Left, South on Right). According to Fleming's Left-Hand Rule, since the negative electron beam travels forward, a magnetic force acts upwards, deflecting both the cathode ray and its shadow upward.",
+                s1_desc_mag_down: "Magnetic Field Applied (South on Left, North on Right). Fleming's Left-Hand Rule determines that the magnetic force acts downwards, deflecting the cathode ray path and the shadow toward the bottom of the screen.",
+                s1_desc_elec_up: "Electric Field Applied (Top Plate Positive, Bottom Negative). The negative electrons in the cathode ray are electrostatically attracted toward the positive plate, deflecting the whole projection upward.",
+                s1_desc_elec_down: "Electric Field Applied (Top Plate Negative, Bottom Positive). The negative electron stream experiences an electrostatic repulsion from the top plate and attraction to the bottom, deflecting the screen image downward.",
+                
+                // Sim 2 Explanations
+                s2_p_header: "P-Type Semiconductor Formation",
+                s2_p_desc: "Silicon (group 14) has 4 valence electrons. When doped with a <strong>Trivalent atom</strong> (group 13 element like Boron), only 3 covalent bonds can form. This leaves a vacancy known as a <strong>Hole</strong>. Holes act as the majority charge carriers, creating a P-Type (Positive-type) semiconductor matrix.",
+                s2_n_header: "N-Type Semiconductor Formation",
+                s2_n_desc: "Silicon is doped with a <strong>Pentavalent atom</strong> (group 15 element like Phosphorus). The dopant has 5 valence electrons. 4 bond with neighboring Silicon atoms, leaving <strong>one extra free electron</strong>. These free electrons become the majority charge carriers, forming an N-Type (Negative-type) semiconductor.",
+
+                // Sim 3 Explanations
+                s3_f_header: "Forward Biasing Connection",
+                s3_f_desc: "The positive terminal of the battery is linked to the P-type side, and the negative terminal to the N-type side. This arrangement repels holes and electrons toward the center junction, narrowing the depletion layer. Resistance drops to near-zero, allowing a current to flow and lighting up the bulb.",
+                s3_r_header: "Reverse Biasing Connection",
+                s3_r_desc: "The positive battery terminal attracts free electrons away from the N-type edge, while the negative terminal pulls holes away from the P-type edge. This widens the depletion layer significantly. The junction becomes highly resistant, blocking current entirely. The bulb stays OFF.",
+
+                // Sim 4 Explanations
+                s4_state_full: "Complete Full-Wave Rectification achieved! All four diodes are oriented correctly. Both cycles of the alternating current are flipped into a single, continuous positive direct current path.",
+                s4_state_half: "Half-Wave Rectification achieved. The current passes cleanly through one cycle but is blocked during the opposite phase. Check the remaining mismatched diodes to fix the circuit.",
+                s4_state_blocked: "Current Circuit Blocked or Shorted! The current path is incomplete or opposing diodes are directly fighting each other. No clean rectified waveform can display safely.",
+                s4_badge_full: "FULL-WAVE OK",
+                s4_badge_half: "HALF-WAVE",
+                s4_badge_blocked: "BLOCKED / FAULT"
+            },
+            ms: {
+                main_title: "⚡ Simulator Makmal Fizik",
+                main_subtitle: "Eksperimen Interaktif untuk Fizik Sekolah Menengah",
+                tab1: "1. Senapang Elektron",
+                tab2: "2. Pendopingan Semikonduktor",
+                tab3: "3. Rangkaian Simpang P-N",
+                tab4: "4. Rangkaian Rektifikasi",
+                controls: "Kawalan Parameter Makmal",
+                anode_voltage: "Voltan Anod (VLT)",
+                field_select: "Medan Pesongan",
+                polarity: "Orientasi / Polariti Medan",
+                tube_view: "Kebuk Vakum Tiub Sinar Katod / Salib Maltese",
+                cro_view: "Pandangan Sasaran Skrin OSK",
+                doping_select: "Pilih Atom Pendoping",
+                lattice_view: "Pandangan Matriks Ikatan Kovalen Atom",
+                battery_polarity: "Polariti Bateri Litar Luaran",
+                junction_circuit: "Keadaan Litar Lapisan Susutan Simpang P-N",
+                bridge_config: "Alat Aturan Orientasi Diod Jambatan",
+                rectifier_instruction: "Ketik mana-mana modul diod di bawah untuk menterbalikkan arah aliran sekatan arus bagi membetulkan kitaran.",
+                cro_rect_title: "Paparan Bentuk Gelombang Osiloskop",
+
+                // Sim 1 Explanations
+                s1_desc_none: "Pancaran termion pada katod panas membebaskan elektron berkelajuan tinggi. Dipecutkan oleh voltan positif tinggi anod (VLT), ia membentuk sinar katod yang bergerak lurus. Bayang salib Maltese logam dipancarkan terus ke skrin pendarfluor, menghasilkan kilauan hijau terang di sekelilingnya.",
+                s1_desc_mag_up: "Medan Magnet Dikenakan (Utara di Kiri, Selatan di Kanan). Mengikut Peraturan Tangan Kiri Fleming, disebabkan sinar katod bercaj negatif bergerak ke hadapan, daya magnet bertindak ke atas, memesongkan bayang ke atas.",
+                s1_desc_mag_down: "Medan Magnet Dikenakan (Selatan di Kiri, Utara di Kanan). Peraturan Tangan Kiri Fleming menetapkan daya magnet bertindak ke bawah, memesongkan sinar katod dan bayang ke bahagian bawah skrin.",
+                s1_desc_elec_up: "Medan Elektrik Dikenakan (Plat Atas Positif, Bawah Negatif). Elektron negatif dalam sinar katod ditarik secara elektrostatik ke arah plat positif, memesongkan unjuran ke atas.",
+                s1_desc_elec_down: "Medan Elektrik Dikenakan (Plat Atas Negatif, Bawah Positif). Aliran elektron negatif mengalami tolakan elektrostatik dari plat atas dan tarikan ke bawah, memesongkan imej skrin ke bawah.",
+
+                // Sim 2 Explanations
+                s2_p_header: "Pembentukan Semikonduktor Jenis-P",
+                s2_p_desc: "Silikon (kumpulan 14) mempunyai 4 elektron valens. Apabila didoping dengan <strong>Atom Trivalen</strong> (unsur kumpulan 13 seperti Boron), hanya 3 ikatan kovalen dapat dibentuk. Ini meninggalkan kekosongan yang dipanggil <strong>Lohang</strong>. Lohang bertindak sebagai pembawa cas majoriti, membentuk semikonduktor Jenis-P (Positif).",
+                s2_n_header: "Pembentukan Semikonduktor Jenis-N",
+                s2_n_desc: "Silikon didoping dengan <strong>Atom Pentavalent</strong> (unsur kumpulan 15 seperti Fosforus). Bahan dopan mempunyai 5 elektron valens. 4 daripadanya terikat dengan atom Silikon, meninggalkan <strong>satu elektron bebas ekstra</strong>. Elektron bebas ini menjadi pembawa cas majoriti, menghasilkan semikonduktor Jenis-N (Negatif).",
+
+                // Sim 3 Explanations
+                s3_f_header: "Sambungan Pintasan Depan",
+                s3_f_desc: "Terminal positif bateri disambungkan ke bahagian jenis-P, dan terminal negatif ke jenis-N. Aturan ini menolak lohang dan elektron ke arah simpang tengah, mengecilkan lapisan susutan. Rintangan jatuh menghampiri sifar, membenarkan arus mengalir dan menyalakan mentol.",
+                s3_r_header: "Sambungan Pintasan Songsang",
+                s3_r_desc: "Terminal positif bateri menarik elektron bebas menjauhi sempadan jenis-N, manakala terminal negatif menarik lohang menjauhi jenis-P. Ini melebarkan lapisan susutan secara mendadak. Simpang menjadi sangat rintang, menyekat arus sepenuhnya. Mentol kekal PADAM.",
+
+                // Sim 4 Explanations
+                s4_state_full: "Rektifikasi Gelombang Penuh Berjaya! Kesemua empat diod disusun dengan betul. Kedua-dua kitaran arus ulang-alik ditukarkan menjadi satu laluan arus terus positif yang berterusan.",
+                s4_state_half: "Rektifikasi Gelombang Suku/Separuh terhasil. Arus melintasi satu fasa bersih tetapi disekat sepenuhnya pada fasa bertentangan. Betulkan diod yang tidak sepadan.",
+                s4_state_blocked: "Litar Arus Sekat atau Pintas! Aliran arus tidak lengkap atau diod yang bertentangan saling bertelingkah. Tiada gelombang rektifikasi yang bersih dapat dipaparkan.",
+                s4_badge_full: "GELOMBANG PENUH",
+                s4_badge_half: "GELOMBANG SEPARUH",
+                s4_badge_blocked: "LITAR SEKAT / RALAT"
+            }
+        };
+
+        let currentLang = 'en';
+        let activeTab = 1;
+
+        // STATE SIMULATION VARIABLES
+        let sim1Field = 'none'; // 'none', 'magnetic', 'electric'
+        let sim2Dopant = 'trivalent';
+        let sim3Bias = 'forward';
+        let diodeOrientations = { 1: 1, 2: 1, 3: 1, 4: 1 }; // 1 = Right/Upwards forward defaults, -1 = Reversed
+
+        // INITIALIZATION
+        window.addEventListener('load', () => {
+            switchTab(1);
+            updateLanguageDOM();
+            startAnimationLoops();
+        });
+
+        // GLOBAL INTERFACE UTILITIES
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ms' : 'en';
+            document.getElementById('lang-btn-text').innerText = currentLang === 'en' ? 'Bahasa Melayu' : 'English';
+            updateLanguageDOM();
+            updateSimTextContexts();
+        }
+
+        function updateLanguageDOM() {
+            document.getElementById('main-title').innerText = langData[currentLang].main_title;
+            document.getElementById('main-subtitle').innerText = langData[currentLang].main_subtitle;
+            document.getElementById('tab1').innerText = langData[currentLang].tab1;
+            document.getElementById('tab2').innerText = langData[currentLang].tab2;
+            document.getElementById('tab3').innerText = langData[currentLang].tab3;
+            document.getElementById('tab4').innerText = langData[currentLang].tab4;
+
+            // Map standard static keys
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[currentLang][key]) {
+                    el.innerHTML = langData[currentLang][key];
+                }
+            });
+        }
+
+        function switchTab(tabIndex) {
+            activeTab = tabIndex;
+            for (let i = 1; i <= 4; i++) {
+                const section = document.getElementById(`sim${i}`);
+                const tabBtn = document.getElementById(`tab${i}`);
+                if (i === tabIndex) {
+                    section.classList.remove('hidden');
+                    tabBtn.className = "heading-font font-bold p-3 rounded-2xl border-b-4 transition text-sm md:text-base cursor-pointer " + getTabColorClass(i);
+                } else {
+                    section.classList.add('hidden');
+                    tabBtn.className = "heading-font font-bold p-3 rounded-2xl border-b-4 transition text-sm md:text-base cursor-pointer bg-white border-gray-300 text-gray-600 hover:bg-gray-50";
+                }
+            }
+            setTimeout(forceResizeCanvases, 50);
+        }
+
+        function getTabColorClass(index) {
+            if (index === 1) return "bg-cyan-400 border-cyan-600 text-white shadow-md";
+            if (index === 2) return "bg-emerald-400 border-emerald-600 text-white shadow-md";
+            if (index === 3) return "bg-amber-400 border-amber-600 text-white shadow-md";
+            return "bg-rose-400 border-rose-600 text-white shadow-md";
+        }
+
+        function forceResizeCanvases() {
+            const ids = ['canvas-tube', 'canvas-cro', 'canvas-lattice', 'canvas-junction', 'canvas-rectifier-cro'];
+            ids.forEach(id => {
+                const c = document.getElementById(id);
+                if (c && c.offsetParent !== null) {
+                    c.width = c.clientWidth * window.devicePixelRatio;
+                    c.height = c.clientHeight * window.devicePixelRatio;
+                }
+            });
+            updateSimTextContexts();
+        }
+        window.addEventListener('resize', forceResizeCanvases);
+
+        // ==========================================
+        // SIMULATION 1 LOGIC ENGINE (ELECTRON GUN)
+        // ==========================================
+        function setField(fieldType) {
+            sim1Field = fieldType;
+            ['none', 'mag', 'elec'].forEach(t => document.getElementById(`f-${t}`).className = "py-2 text-xs font-bold rounded-lg cursor-pointer bg-gray-100 text-gray-600 hover:bg-gray-200");
+            
+            const activeId = fieldType === 'none' ? 'none' : (fieldType === 'magnetic' ? 'mag' : 'elec');
+            document.getElementById(`f-${activeId}`).className = "py-2 text-xs font-bold rounded-lg cursor-pointer bg-cyan-500 text-white";
+
+            const polarityContainer = document.getElementById('field-polarity-container');
+            const dirSelect = document.getElementById('sim1-dir');
+            
+            if (fieldType === 'none') {
+                polarityContainer.classList.add('hidden');
+            } else {
+                polarityContainer.classList.remove('hidden');
+                dirSelect.innerHTML = fieldType === 'magnetic' 
+                    ? `<option value="up">N (Left) -> S (Right) [Force Up]</option><option value="down">S (Left) -> N (Right) [Force Down]</option>`
+                    : `<option value="up">Top Plate (+), Bottom (-) [Force Up]</option><option value="down">Top Plate (-), Bottom (+) [Force Down]</option>`;
+            }
+            updateSim1();
+        }
+
+        function updateSim1() {
+            const v = document.getElementById('sim1-v').value;
+            document.getElementById('v1-val').innerText = v;
+            updateSimTextContexts();
+        }
+
+        function updateSimTextContexts() {
+            // Update Text strings for Sim 1 dynamically
+            const expBox = document.getElementById('sim1-explanation');
+            if (!expBox) return;
+            const dir = document.getElementById('sim1-dir')?.value || 'up';
+
+            if (sim1Field === 'none') expBox.innerHTML = langData[currentLang].s1_desc_none;
+            else if (sim1Field === 'magnetic') expBox.innerHTML = (dir === 'up') ? langData[currentLang].s1_desc_mag_up : langData[currentLang].s1_desc_mag_down;
+            else expBox.innerHTML = (dir === 'up') ? langData[currentLang].s1_desc_elec_up : langData[currentLang].s1_desc_elec_down;
+
+            // Update Text strings for Sim 2
+            const s2Header = document.getElementById('sim2-type-header');
+            const s2Exp = document.getElementById('sim2-explanation');
+            if (sim2Dopant === 'trivalent') {
+                s2Header.innerText = langData[currentLang].s2_p_header;
+                s2Exp.innerHTML = langData[currentLang].s2_p_desc;
+            } else {
+                s2Header.innerText = langData[currentLang].s2_n_header;
+                s2Exp.innerHTML = langData[currentLang].s2_n_desc;
+            }
+
+            // Update Text strings for Sim 3
+            const s3Header = document.getElementById('sim3-bias-header');
+            const s3Exp = document.getElementById('sim3-explanation');
+            const s3Badge = document.getElementById('sim3-bulb-status');
+            if (sim3Bias === 'forward') {
+                s3Header.innerText = langData[currentLang].s3_f_header;
+                s3Exp.innerHTML = langData[currentLang].s3_f_desc;
+                s3Badge.className = "px-2 py-0.5 text-xs font-black rounded-md uppercase tracking-wider bg-amber-400 text-slate-900 animate-pulse";
+                s3Badge.innerText = currentLang === 'en' ? "BULB ON" : "MENTOL HIDUP";
+            } else {
+                s3Header.innerText = langData[currentLang].s3_r_header;
+                s3Exp.innerHTML = langData[currentLang].s3_r_desc;
+                s3Badge.className = "px-2 py-0.5 text-xs font-black rounded-md uppercase tracking-wider bg-slate-700 text-slate-400";
+                s3Badge.innerText = currentLang === 'en' ? "BULB OFF" : "MENTOL PADAM";
+            }
+
+            // Update Rectifier Analysis Text
+            analyzeRectifierCircuit();
+        }
+
+        // ==========================================
+        // SIMULATION 2 LOGIC ENGINE (DOPING)
+        // ==========================================
+        function setDopant(type) {
+            sim2Dopant = type;
+            document.getElementById('d-tri').className = type === 'trivalent' 
+                ? "py-3 px-2 text-xs font-bold rounded-xl border-2 border-emerald-500 bg-emerald-500 text-white cursor-pointer transition"
+                : "py-3 px-2 text-xs font-bold rounded-xl border-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50 cursor-pointer transition";
+            document.getElementById('d-penta').className = type === 'pentavalent' 
+                ? "py-3 px-2 text-xs font-bold rounded-xl border-2 border-emerald-500 bg-emerald-500 text-white cursor-pointer transition"
+                : "py-3 px-2 text-xs font-bold rounded-xl border-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50 cursor-pointer transition";
+            updateSimTextContexts();
+        }
+
+        // ==========================================
+        // SIMULATION 3 LOGIC ENGINE (PN JUNCTION BIAS)
+        // ==========================================
+        function setBiasPolarity(biasType) {
+            sim3Bias = biasType;
+            document.getElementById('b-fwd').className = biasType === 'forward'
+                ? "py-3 px-2 text-xs font-bold rounded-xl border-2 border-amber-500 bg-amber-500 text-white cursor-pointer transition"
+                : "py-3 px-2 text-xs font-bold rounded-xl border-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50 cursor-pointer transition";
+            document.getElementById('b-rev').className = biasType === 'reverse'
+                ? "py-3 px-2 text-xs font-bold rounded-xl border-2 border-amber-500 bg-amber-500 text-white cursor-pointer transition"
+                : "py-3 px-2 text-xs font-bold rounded-xl border-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50 cursor-pointer transition";
+            updateSimTextContexts();
+        }
+
+        // ==========================================
+        // SIMULATION 4 LOGIC ENGINE (RECTIFIER BRIDGE)
+        // ==========================================
+        function rotateDiode(id) {
+            diodeOrientations[id] = diodeOrientations[id] === 1 ? -1 : 1;
+            const elementIcon = document.getElementById(`d${id}-icon`);
+            if (diodeOrientations[id] === 1) {
+                elementIcon.innerText = "▶|";
+                elementIcon.style.transform = "rotate(0deg)";
+            } else {
+                elementIcon.innerText = "|◀";
+            }
+            updateSimTextContexts();
+        }
+
+        function resetDiodes() {
+            diodeOrientations = { 1: 1, 2: 1, 3: 1, 4: 1 };
+            for(let i=1; i<=4; i++) {
+                document.getElementById(`d${i}-icon`).innerText = "▶|";
+            }
+            updateSimTextContexts();
+        }
+
+        function analyzeRectifierCircuit() {
+            const d1 = diodeOrientations[1];
+            const d2 = diodeOrientations[2];
+            const d3 = diodeOrientations[3];
+            const d4 = diodeOrientations[4];
+
+            const badge = document.getElementById('rect-status-badge');
+            const title = document.getElementById('rect-analysis-title');
+            const desc = document.getElementById('sim4-explanation');
+
+            // Correct full wave alignment matrix matching absolute diamond schematic paths:
+            // Standard full wave requires alternative pairs flowing smoothly together towards top load rail.
+            if (d1 === 1 && d2 === -1 && d3 === 1 && d4 === -1) {
+                badge.className = "px-2 py-0.5 text-xs font-black rounded-md bg-emerald-500 text-white animate-bounce";
+                badge.innerText = langData[currentLang].s4_badge_full;
+                title.innerText = currentLang === 'en' ? "Full Wave Active" : "Gelombang Penuh Aktif";
+                desc.innerHTML = langData[currentLang].s4_state_full;
+                window.currentRectMode = 'full';
+            } 
+            // Half-wave scenarios occurs if paths allow single directional half routing
+            else if ((d1 === 1 && d3 === 1 && d2 === 1 && d4 === 1) || (d1 === -1 && d2 === -1 && d3 === -1 && d4 === -1)) {
+                badge.className = "px-2 py-0.5 text-xs font-black rounded-md bg-amber-500 text-white";
+                badge.innerText = langData[currentLang].s4_badge_half;
+                title.innerText = currentLang === 'en' ? "Half Wave Rectification" : "Rektifikasi Separuh Gelombang";
+                desc.innerHTML = langData[currentLang].s4_state_half;
+                window.currentRectMode = 'half';
+            } 
+            // Shunted / broken orientations
+            else {
+                badge.className = "px-2 py-0.5 text-xs font-black rounded-md bg-rose-500 text-white";
+                badge.innerText = langData[currentLang].s4_badge_blocked;
+                title.innerText = currentLang === 'en' ? "Circuit Interrupted / Fault" : "Litar Terputus / Ralat Aturan";
+                desc.innerHTML = langData[currentLang].s4_state_blocked;
+                window.currentRectMode = 'blocked';
+            }
+        }
+
+        // ==========================================
+        // DYNAMIC GRAPHICS & RENDER TIMELINE ENGINES
+        // ==========================================
+        let animationFrameId;
+        function startAnimationLoops() {
+            let timestamp = 0;
+            function loop() {
+                timestamp += 0.05;
+                renderSim1(timestamp);
+                renderSim2(timestamp);
+                renderSim3(timestamp);
+                renderSim4(timestamp);
+                animationFrameId = requestAnimationFrame(loop);
+            }
+            animationFrameId = requestAnimationFrame(loop);
+        }
+
+        function renderSim1(t) {
+            const cTube = document.getElementById('canvas-tube');
+            const cCro = document.getElementById('canvas-cro');
+            if (!cTube || cTube.offsetParent === null) return;
+
+            const ctxT = cTube.getContext('2d');
+            const ctxC = cCro.getContext('2d');
+            const wT = cTube.width; const hT = cTube.height;
+            const wC = cCro.width; const hC = cCro.height;
+
+            const voltage = parseFloat(document.getElementById('sim1-v').value);
+            const intensity = voltage / 6.0; // Normalized factor
+            const direction = document.getElementById('sim1-dir')?.value || 'up';
+
+            // --- 1. RENDER VACUUM TUBE GLASS ---
+            ctxT.clearRect(0,0,wT,hT);
+            ctxT.fillStyle = '#090d16';
+            ctxT.fillRect(0,0,wT,hT);
+
+            // Tube Outline Envelope
+            ctxT.strokeStyle = '#475569';
+            ctxT.lineWidth = 3;
+            ctxT.beginPath();
+            ctxT.arc(wT*0.65, hT*0.5, hT*0.4, Math.PI*1.6, Math.PI*0.4, false);
+            ctxT.lineTo(wT*0.1, hT*0.7);
+            ctxT.lineTo(wT*0.1, hT*0.3);
+            ctxT.closePath();
+            ctxT.stroke();
+
+            // Cathode Gun Base Filament Glow
+            ctxT.fillStyle = `rgba(251, 146, 60, ${0.4 + intensity*0.6})`;
+            ctxT.beginPath();
+            ctxT.arc(wT*0.15, hT*0.5, 12, 0, Math.PI*2);
+            ctxT.fill();
+
+            // Sinar Katod (Electron Ray beam lines)
+            let deflectionY = 0;
+            if (sim1Field !== 'none') {
+                deflectionY = (direction === 'up') ? -25 * intensity : 25 * intensity;
+            }
+
+            ctxT.strokeStyle = `rgba(34, 211, 238, ${0.2 + intensity*0.8})`;
+            ctxT.lineWidth = 4 + intensity*4;
+            ctxT.beginPath();
+            ctxT.moveTo(wT*0.15, hT*0.5);
+            ctxT.bezierCurveTo(wT*0.4, hT*0.5, wT*0.6, hT*0.5 + deflectionY*0.5, wT*0.9, hT*0.5 + deflectionY);
+            ctxT.stroke();
+
+            // Draw Maltese Cross Silhouette Block mid-way
+            ctxT.fillStyle = '#64748b';
+            ctxT.fillRect(wT*0.52, hT*0.4, 6, hT*0.2);
+            ctxT.fillRect(wT*0.46, hT*0.47, wT*0.12, 6);
+
+            // Phosphor green plate landing arc feedback
+            ctxT.fillStyle = `rgba(74, 222, 128, ${intensity})`;
+            ctxT.beginPath();
+            ctxT.arc(wT*0.92, hT*0.5 + deflectionY, 15 * intensity, 0, Math.PI*2);
+            ctxT.fill();
+
+            // --- 2. RENDER TARGET CRO OSCILLOSCOPE EYE ANGLE ---
+            ctxC.clearRect(0,0,wC,hC);
+            // Dynamic Grid Lines
+            ctxC.strokeStyle = '#143a1d';
+            ctxC.lineWidth = 1;
+            for(let i=0; i<wC; i+=20) { ctxC.beginPath(); ctxC.moveTo(i,0); ctxC.lineTo(i,hC); ctxC.stroke(); }
+            for(let j=0; j<hC; j+=20) { ctxC.beginPath(); ctxC.moveTo(0,j); ctxC.lineTo(wC,j); ctxC.stroke(); }
+
+            // Center cross-hair indicators
+            ctxC.strokeStyle = '#1e5e2f';
+            ctxC.lineWidth = 1.5;
+            ctxC.beginPath(); ctxC.moveTo(wC*0.5, 0); ctxC.lineTo(wC*0.5, hC); ctxC.stroke();
+            ctxC.beginPath(); ctxC.moveTo(0, hC*0.5); ctxC.lineTo(wC, hC*0.5); ctxC.stroke();
+
+            // Draw projected green cross shadow target profile matching coordinates
+            ctxC.save();
+            ctxC.translate(wC*0.5, hC*0.5 + deflectionY*1.8);
+            
+            // Base background green excitation beam spot glow
+            let grad = ctxC.createRadialGradient(0,0, 2, 0,0, hC*0.45);
+            grad.addColorStop(0, `rgba(74, 222, 128, ${0.3 + intensity*0.7})`);
+            grad.addColorStop(0.7, `rgba(34, 197, 94, ${intensity*0.3})`);
+            grad.addColorStop(1, 'transparent');
+            ctxC.fillStyle = grad;
+            ctxC.beginPath(); ctxC.arc(0,0, hC*0.45, 0, Math.PI*2); ctxC.fill();
+
+            // High dark contrast shadow mask mapping representing sharp cross block obstruction geometry
+            ctxC.fillStyle = '#0d1b10';
+            ctxC.beginPath();
+            // Vertical wings
+            ctxC.moveTo(-12, -hC*0.38); ctxC.lineTo(12, -hC*0.38); ctxC.lineTo(6, 0); ctxC.lineTo(-6, 0); ctxC.closePath();
+            ctxC.moveTo(-12, hC*0.38); ctxC.lineTo(12, hC*0.38); ctxC.lineTo(6, 0); ctxC.lineTo(-6, 0); ctxC.closePath();
+            // Horizontal wings
+            ctxC.moveTo(-wC*0.38, -12); ctxC.lineTo(-wC*0.38, 12); ctxC.lineTo(0, 6); ctxC.lineTo(0, -6); ctxC.closePath();
+            ctxC.moveTo(wC*0.38, -12); ctxC.lineTo(wC*0.38, 12); ctxC.lineTo(0, 6); ctxC.lineTo(0, -6); ctxC.closePath();
+            ctxC.fill();
+
+            ctxC.restore();
+        }
+
+        function renderSim2(t) {
+            const canvas = document.getElementById('canvas-lattice');
+            if (!canvas || canvas.offsetParent === null) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width; const h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+
+            const rows = 3; const cols = 3;
+            const spacingX = w / (cols + 1);
+            const spacingY = h / (rows + 1);
+
+            // Draw Covalent Bond lines
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 4;
+            for(let r=1; r<=rows; r++) {
+                ctx.beginPath();
+                ctx.moveTo(spacingX, r*spacingY);
+                ctx.lineTo(cols*spacingX, r*spacingY);
+                ctx.stroke();
+            }
+            for(let c=1; c<=cols; c++) {
+                ctx.beginPath();
+                ctx.moveTo(c*spacingX, spacingY);
+                ctx.lineTo(c*spacingX, rows*spacingY);
+                ctx.stroke();
+            }
+
+            // Draw Atom Interlocking nodes
+            for(let r=1; r<=rows; r++) {
+                for(let c=1; c<=cols; c++) {
+                    const x = c * spacingX;
+                    const y = r * spacingY;
+                    const isCenter = (r === 2 && c === 2);
+
+                    if (isCenter) {
+                        if (sim2Dopant === 'trivalent') {
+                            // Boron Core Node
+                            ctx.fillStyle = '#f43f5e';
+                            ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI*2); ctx.fill();
+                            ctx.fillStyle = '#white';
+                            ctx.font = 'bold 12px sans-serif';
+                            ctx.fillStyle = '#fff';
+                            ctx.fillText('B (3+)', x-16, y+4);
+
+                            // Missing electron hole orbit indicators
+                            let holeX = x + 35 * Math.cos(t*0.5);
+                            let holeY = y + 35 * Math.sin(t*0.5);
+                            ctx.strokeStyle = '#f43f5e';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath(); ctx.arc(holeX, holeY, 7, 0, Math.PI*2); ctx.stroke();
+                        } else {
+                            // Pentavalent Core Node (Phosphorus)
+                            ctx.fillStyle = '#10b981';
+                            ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI*2); ctx.fill();
+                            ctx.font = 'bold 12px sans-serif';
+                            ctx.fillStyle = '#fff';
+                            ctx.fillText('P (5+)', x-16, y+4);
+
+                            // Wandering free unbounded mobile conduction electrons
+                            let freeX = x + 45 * Math.cos(t * 0.8);
+                            let freeY = y + 25 * Math.sin(t * 0.8);
+                            ctx.fillStyle = '#22d3ee';
+                            ctx.beginPath(); ctx.arc(freeX, freeY, 5, 0, Math.PI*2); ctx.fill();
+                        }
+                    } else {
+                        // Regular Baseline Matrix Silicon Nuclei
+                        ctx.fillStyle = '#3b82f6';
+                        ctx.beginPath(); ctx.arc(x, y, 18, 0, Math.PI*2); ctx.fill();
+                        ctx.font = 'bold 11px sans-serif';
+                        ctx.fillStyle = '#fff';
+                        ctx.fillText('Si (4+)', x-15, y+4);
+
+                        // Bound valence pair animations ticking on bonds
+                        ctx.fillStyle = '#22d3ee';
+                        ctx.beginPath(); ctx.arc(x+20, y, 4, 0, Math.PI*2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(x, y+20, 4, 0, Math.PI*2); ctx.fill();
+                    }
+                }
+            }
+        }
+
+        function renderSim3(t) {
+            const canvas = document.getElementById('canvas-junction');
+            if (!canvas || canvas.offsetParent === null) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width; const h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+
+            // Depletion Width variable calculations
+            let dWidth = sim3Bias === 'forward' ? 30 : 130;
+            let center = w * 0.5;
+
+            // P-Type block fill left
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(20, 40, center - 20, 140);
+            // N-Type block fill right
+            ctx.fillRect(center, 40, w - center - 20, 140);
+
+            // Interface Separator barrier boundary lines
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(20, 40, w-40, 140);
+            ctx.beginPath(); ctx.moveTo(center, 40); ctx.lineTo(center, 180); ctx.stroke();
+
+            // Depletion zone shading dynamic fill box overlay overlays
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.25)';
+            ctx.fillRect(center - dWidth*0.5, 40, dWidth, 140);
+
+            // Labels
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.fillText('P-Type', 40, 65);
+            ctx.fillText('N-Type', w - 100, 65);
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = '9px sans-serif';
+            ctx.fillText(currentLang==='en'?'DEPLETION LAYER':'LAPISAN SUSUTAN', center - 40, 30);
+
+            // Ions inside Depletion boundaries
+            ctx.fillStyle = '#f43f5e'; // Negative Acceptors on left junction boundary edge
+            if (dWidth > 50) {
+                ctx.fillText('-', center - 20, 100);
+                ctx.fillText('-', center - 15, 130);
+            }
+            ctx.fillStyle = '#10b981'; // Positive Donors on right junction boundary edge
+            if (dWidth > 50) {
+                ctx.fillText('+', center + 12, 100);
+                ctx.fillText('+', center + 12, 130);
+            }
+
+            // Mobile Carrier Animation distribution logic
+            ctx.fillStyle = '#f43f5e'; // Majority holes
+            for (let i = 0; i < 6; i++) {
+                let hX = 35 + (i * 20) % (center - dWidth*0.5 - 40);
+                let hY = 90 + (i * 15) % 70;
+                ctx.beginPath(); ctx.arc(hX, hY, 5, 0, Math.PI*2); ctx.fill();
+            }
+
+            ctx.fillStyle = '#22d3ee'; // Conduction free electrons
+            for (let i = 0; i < 6; i++) {
+                let eX = (center + dWidth*0.5 + 20) + (i * 25) % (w - center - dWidth*0.5 - 50);
+                let eY = 90 + (i * 12) % 70;
+                ctx.beginPath(); ctx.arc(eX, eY, 4, 0, Math.PI*2); ctx.fill();
+            }
+
+            // External Wire Leads & Peripheral Hardware Renderings
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(20, 110); ctx.lineTo(50, 110); // Left lead terminal node line hook
+            ctx.moveTo(w-20, 110); ctx.lineTo(w-50, 110);
+
+            // Lower battery circuit loops routing lines setup
+            ctx.beginPath();
+            ctx.moveTo(50, 110); ctx.lineTo(50, 240); ctx.lineTo(w*0.35, 240);
+            ctx.moveTo(w-50, 110); ctx.lineTo(w-50, 240); ctx.lineTo(w*0.65, 240);
+            ctx.stroke();
+
+            // Center Filament Bulb unit drawing blocks
+            ctx.strokeStyle = '#fff';
+            ctx.fillStyle = sim3Bias === 'forward' ? 'rgba(253, 224, 71, 0.8)' : '#334155';
+            ctx.beginPath(); ctx.arc(w*0.5, 240, 20, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+
+            // Dynamic battery configuration visualization matching runtime choices
+            ctx.fillStyle = '#ef4444'; // Red long block = positive rail node element
+            let leftSign = sim3Bias === 'forward' ? '+' : '-';
+            let rightSign = sim3Bias === 'forward' ? '-' : '+';
+
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillStyle = '#f43f5e'; ctx.fillText(leftSign, w*0.33, 225);
+            ctx.fillStyle = '#64748b'; ctx.fillText(rightSign, w*0.64, 225);
+        }
+
+        function renderSim4(t) {
+            const canvas = document.getElementById('canvas-rectifier-cro');
+            if (!canvas || canvas.offsetParent === null) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width; const h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+
+            // Draw oscilloscope target grid markers
+            ctx.strokeStyle = '#143a1d';
+            ctx.lineWidth = 1;
+            for(let i=0; i<w; i+=25) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,h); ctx.stroke(); }
+            for(let j=0; j<h; j+=25) { ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(w,j); ctx.stroke(); }
+
+            ctx.strokeStyle = '#1e5e2f';
+            ctx.beginPath(); ctx.moveTo(0, h*0.5); ctx.lineTo(w, h*0.5); ctx.stroke();
+
+            // Trace plotting path tracking algorithms
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            const scaleY = h * 0.35;
+            const freq = 0.08;
+
+            for(let x=0; x<w; x++) {
+                let inputSine = Math.sin(x * freq - t * 2);
+                let outputY = 0;
+
+                if (window.currentRectMode === 'full') {
+                    outputY = Math.abs(inputSine); // Flips negative peaks into positive domain
+                } else if (window.currentRectMode === 'half') {
+                    outputY = inputSine > 0 ? inputSine : 0; // Completely clips out lower valleys
+                } else {
+                    outputY = 0; // Flat-line fault block condition
+                }
+
+                let drawX = x;
+                let drawY = (h * 0.5) - (outputY * scaleY);
+
+                if (x === 0) ctx.moveTo(drawX, drawY);
+                else ctx.lineTo(drawX, drawY);
+            }
+
+            ctx.strokeStyle = '#4ade80';
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = '#22c55e';
+            ctx.stroke();
+            ctx.shadowBlur = 0; // Immediately restore canvas pipeline contexts
+        }
+    </script>
+</body>
+</html>
