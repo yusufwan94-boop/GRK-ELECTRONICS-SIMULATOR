@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Physics Spark Portal: Let's Learn Electricity! ⚡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #0f172a;
+            overflow-x: hidden;
+        }
+
+        .heading-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Cheerful floating animations */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.8), 0 0 40px rgba(139, 92, 246, 0.6); }
+        }
+
+        .floating-card {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .floating-card-delayed {
+            animation: float 4.5s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        .glow-btn {
+            animation: pulse-glow 3s infinite;
+        }
+    </style>
+</head>
+<body class="relative text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Interactive Canvas Background for Glowing Electrons -->
+    <canvas id="circuit-bg" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Content Wrapper (Ensures everything sits above canvas) -->
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 py-8 flex-grow flex flex-col justify-center">
+        
+        <!-- Header Section with Floating Emotes -->
+        <header class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 bg-slate-800/80 backdrop-blur-md px-6 py-2 rounded-full border border-sky-400/30 mb-4 shadow-lg">
+                <span class="animate-bounce">⚡</span>
+                <span class="text-sky-300 font-bold uppercase tracking-wider text-xs heading-font">Classroom Physics Hub</span>
+                <span class="animate-bounce" style="animation-delay: 0.2s">⚡</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black heading-font tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-sky-300 to-indigo-400 drop-shadow-sm">
+                PHYSICS SPARK!
+            </h1>
+            <p class="text-slate-300 mt-3 text-base md:text-xl font-medium max-w-xl mx-auto">
+                Ready to charge your brain? Tap on a simulator below to begin your electrical adventure! 💡
+            </p>
+        </header>
+
+        <!-- Main Hub Grid -->
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto w-full items-stretch">
+            
+            <!-- Card 1: Resistance Simulator -->
+            <div class="floating-card bg-slate-900/90 border-2 border-emerald-400/30 hover:border-emerald-400 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl transition-all duration-300 hover:scale-105 group backdrop-blur-md">
+                <div>
+                    <!-- Visual Header Icon -->
+                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/20 group-hover:rotate-6 transition-transform">
+                        <!-- Custom SVG resistor wave -->
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-5 3 10 3-10 2 7h2l1-2h3" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-2xl md:text-3xl font-black heading-font text-emerald-300 mb-3">Conductor Resistance Lab</h2>
+                    <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
+                        Discover how the <span class="text-yellow-300 font-bold">length</span>, <span class="text-yellow-300 font-bold">thickness (S.W.G.)</span>, and <span class="text-yellow-300 font-bold">material resistivity</span> control current. See real-time electron collisions!
+                    </p>
+                </div>
+                
+                <a href="resistance_sim.html" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-center rounded-2xl shadow-xl transition-all hover:shadow-emerald-500/30 transform hover:translate-y-[-2px] tracking-wider heading-font">
+                    LAUNCH LAB 🚀
+                </a>
+            </div>
+
+            <!-- Card 2: Electronics Lab -->
+            <div class="floating-card-delayed bg-slate-900/90 border-2 border-cyan-400/30 hover:border-cyan-400 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl transition-all duration-300 hover:scale-105 group backdrop-blur-md">
+                <div>
+                    <!-- Visual Header Icon -->
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 group-hover:rotate-6 transition-transform">
+                        <!-- Custom SVG logic gate or circuit -->
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                            <path d="M10 6.5h4v7" />
+                            <circle cx="14" cy="13.5" r="1" fill="currentColor" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-2xl md:text-3xl font-black heading-font text-cyan-300 mb-3">Interactive Electronics Lab</h2>
+                    <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
+                        Explore logic gates, diodes, transistors, or build custom circuits! Power up devices and watch current map out on your workspace.
+                    </p>
+                </div>
+                
+                <a href="electronics.html" class="w-full py-4 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-center rounded-2xl shadow-xl transition-all hover:shadow-cyan-500/30 transform hover:translate-y-[-2px] tracking-wider heading-font">
+                    LAUNCH LAB 🚀
+                </a>
+            </div>
+
+        </main>
+
+        <!-- Quick Classroom Joke & Interaction Panel -->
+        <div class="mt-12 max-w-2xl mx-auto w-full bg-slate-800/50 border border-slate-700/50 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-md">
+            <div class="text-center md:text-left flex-1">
+                <h4 class="font-bold text-yellow-300 heading-font mb-1">⚡ Daily Electric Pun!</h4>
+                <p id="pun-box" class="text-slate-300 italic text-sm md:text-base">"What is a conductor's favorite type of music? Heavy Metal!"</p>
+                <button onclick="newPun()" class="mt-2 text-xs text-sky-400 hover:text-sky-300 font-bold uppercase tracking-wider transition-colors">⚡ Next Pun</button>
+            </div>
+            
+            <!-- Simple Interactive "Supercharge Clicker" Game -->
+            <div class="flex flex-col items-center bg-slate-950/60 p-4 rounded-2xl border border-slate-700/60 w-full md:w-auto min-w-[200px]">
+                <span class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Supercharge Your Hub</span>
+                <button onclick="chargeUp()" class="glow-btn bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-black px-4 py-2 rounded-xl text-sm transition-all flex items-center gap-1 active:scale-95">
+                    🔋 Tap to Generate Power!
+                </button>
+                <div class="w-full bg-slate-800 h-2.5 rounded-full mt-3 overflow-hidden">
+                    <div id="charge-bar" class="bg-gradient-to-r from-yellow-300 to-orange-500 h-full w-[10%] transition-all duration-300"></div>
+                </div>
+                <span id="charge-text" class="text-[11px] text-yellow-400 mt-1 font-bold">Generator at 10% capacity!</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-10 w-full text-center py-6 text-slate-500 text-xs border-t border-slate-800/40 bg-slate-950/20 backdrop-blur-xs">
+        <p>© 2026 Physics Spark Lab • Made with love for science students around the world ❤️</p>
+    </footer>
+
+    <!-- Canvas Circuit Pattern & Particle Animation Script -->
+    <script>
+        const canvas = document.getElementById('circuit-bg');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let nodes = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initNodes();
+        }
+
+        // Initialize static circuit junctions
+        function initNodes() {
+            nodes = [];
+            const cols = 5;
+            const rows = 4;
+            const xStep = canvas.width / (cols + 1);
+            const yStep = canvas.height / (rows + 1);
+
+            for (let i = 1; i <= cols; i++) {
+                for (let j = 1; j <= rows; j++) {
+                    nodes.push({
+                        x: xStep * i + (Math.random() * 60 - 30),
+                        y: yStep * j + (Math.random() * 60 - 30)
+                    });
+                }
+            }
+        }
+
+        // Create glowing charge particles
+        function spawnParticle() {
+            if (nodes.length < 2) return;
+            const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+            // Find an adjacent node that is relatively close
+            const candidates = nodes.filter(n => {
+                const dist = Math.hypot(n.x - startNode.x, n.y - startNode.y);
+                return dist > 50 && dist < 400;
+            });
+            
+            if (candidates.length === 0) return;
+            const targetNode = candidates[Math.floor(Math.random() * candidates.length)];
+
+            particles.push({
+                x: startNode.x,
+                y: startNode.y,
+                startX: startNode.x,
+                startY: startNode.y,
+                targetX: targetNode.x,
+                targetY: targetNode.y,
+                progress: 0,
+                speed: 0.005 + Math.random() * 0.01,
+                size: 2 + Math.random() * 3,
+                color: Math.random() > 0.5 ? '#38bdf8' : '#eab308'
+            });
+        }
+
+        function animateCircuit() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw circuit connection lines faintly
+            ctx.strokeStyle = 'rgba(51, 65, 85, 0.15)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+                    if (dist < 250) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw circuit nodes faintly
+            nodes.forEach(n => {
+                ctx.fillStyle = 'rgba(71, 85, 105, 0.3)';
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Update & Draw flowing particles (electrons)
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.progress += p.speed;
+
+                // Cubic easing for nice velocity changes
+                const eased = p.progress; 
+                p.x = p.startX + (p.targetX - p.startX) * eased;
+                p.y = p.startY + (p.targetY - p.startY) * eased;
+
+                // Draw glowing electron
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset shadow
+
+                if (p.progress >= 1) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            if (Math.random() < 0.07 && particles.length < 40) {
+                spawnParticle();
+            }
+
+            requestAnimationFrame(animateCircuit);
+        }
+
+        // Classroom Jokes Bank
+        const puns = [
+            "Why did the light bulb fail the physics test? It wasn't very bright!",
+            "What is a conductor's favorite type of music? Heavy Metal!",
+            "How do copper atoms greet each other? 'Watt's up!'",
+            "Why are electricians always up to date? Because they love current events!",
+            "What do you call an electric transformer that falls in love? An optimus prime spark!",
+            "Why did the electron throw up? It was having a spin cycle!"
+        ];
+
+        function newPun() {
+            const index = Math.floor(Math.random() * puns.length);
+            document.getElementById('pun-box').innerText = `"${puns[index]}"`;
+        }
+
+        // Supercharge Clicker logic
+        let charge = 10;
+        function chargeUp() {
+            if (charge < 100) {
+                charge += 10;
+                if (charge > 100) charge = 100;
+                
+                // Spawn bonus fast particles on canvas for interactive visual feedback!
+                for (let i = 0; i < 5; i++) {
+                    spawnParticle();
+                }
+
+                updateChargeUI();
+            }
+        }
+
+        function updateChargeUI() {
+            const bar = document.getElementById('charge-bar');
+            const text = document.getElementById('charge-text');
+            bar.style.width = `${charge}%`;
+            
+            if (charge === 100) {
+                text.innerText = "⚡ Supercharged! Max Energy reached! ⚡";
+                text.classList.remove('text-yellow-400');
+                text.classList.add('text-emerald-400', 'animate-pulse');
+                
+                // Explode particles of random light colors as interactive confetti
+                for(let i=0; i<30; i++) {
+                     particles.push({
+                         x: canvas.width / 2,
+                         y: canvas.height / 2,
+                         startX: canvas.width / 2,
+                         startY: canvas.height / 2,
+                         targetX: canvas.width / 2 + (Math.random() * 600 - 300),
+                         targetY: canvas.height / 2 + (Math.random() * 600 - 300),
+                         progress: 0,
+                         speed: 0.02 + Math.random() * 0.03,
+                         size: 4 + Math.random() * 4,
+                         color: '#facc15'
+                     });
+                }
+            } else {
+                text.innerText = `Generator at ${charge}% capacity!`;
+            }
+        }
+
+        // Event Listeners
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('DOMContentLoaded', () => {
+            resizeCanvas();
+            animateCircuit();
+        });
+    </script>
+</body>
+</html>
+
+```
