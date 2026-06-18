@@ -39,6 +39,11 @@
             animation-delay: 1s;
         }
 
+        .floating-card-extra {
+            animation: float 4.8s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+
         .glow-btn {
             animation: pulse-glow 3s infinite;
         }
@@ -59,7 +64,7 @@
                 <span class="text-sky-300 font-bold uppercase tracking-wider text-xs heading-font">Classroom Physics Hub</span>
                 <span class="animate-bounce" style="animation-delay: 0.2s">⚡</span>
             </div>
-            <h1 class="text-4xl md:text-6xl font-black heading-font tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-sky-300 to-indigo-400 drop-shadow-sm">
+            <h1 class="text-4xl md:text-6xl font-black heading-font tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-sky-300 to-pink-400 drop-shadow-sm">
                 PHYSICS SPARK!
             </h1>
             <p class="text-slate-300 mt-3 text-base md:text-xl font-medium max-w-xl mx-auto">
@@ -67,38 +72,38 @@
             </p>
         </header>
 
-        <!-- Main Hub Grid -->
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto w-full items-stretch">
+        <!-- Main Hub Grid - Expanded to md:grid-cols-3 -->
+        <main class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full items-stretch">
             
             <!-- Card 1: Resistance Simulator -->
-            <div class="floating-card bg-slate-900/90 border-2 border-emerald-400/30 hover:border-emerald-400 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl transition-all duration-300 hover:scale-105 group backdrop-blur-md">
+            <div class="floating-card bg-slate-900/90 border-2 border-emerald-400/30 hover:border-emerald-400 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 hover:scale-105 group backdrop-blur-md">
                 <div>
                     <!-- Visual Header Icon -->
-                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/20 group-hover:rotate-6 transition-transform">
+                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-emerald-500/20 group-hover:rotate-6 transition-transform">
                         <!-- Custom SVG resistor wave -->
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-5 3 10 3-10 2 7h2l1-2h3" />
                         </svg>
                     </div>
                     
-                    <h2 class="text-2xl md:text-3xl font-black heading-font text-emerald-300 mb-3">Conductor Resistance Lab</h2>
-                    <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
-                        Discover how the <span class="text-yellow-300 font-bold">length</span>, <span class="text-yellow-300 font-bold">thickness (S.W.G.)</span>, and <span class="text-yellow-300 font-bold">material resistivity</span> control current. See real-time electron collisions!
+                    <h2 class="text-xl md:text-2xl font-black heading-font text-emerald-300 mb-2">Conductor Resistance Lab</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        Discover how the <span class="text-yellow-300 font-bold">length</span>, <span class="text-yellow-300 font-bold">thickness</span>, and <span class="text-yellow-300 font-bold">material resistivity</span> control current. See real-time electron collisions!
                     </p>
                 </div>
                 
-                <a href="resistance.html" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-center rounded-2xl shadow-xl transition-all hover:shadow-emerald-500/30 transform hover:translate-y-[-2px] tracking-wider heading-font">
+                <a href="resistance.html" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-center rounded-2xl shadow-xl transition-all hover:shadow-emerald-500/30 transform hover:translate-y-[-2px] tracking-wider heading-font">
                     LAUNCH LAB 🚀
                 </a>
             </div>
 
             <!-- Card 2: Electronics Lab -->
-            <div class="floating-card-delayed bg-slate-900/90 border-2 border-cyan-400/30 hover:border-cyan-400 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl transition-all duration-300 hover:scale-105 group backdrop-blur-md">
+            <div class="floating-card-delayed bg-slate-900/90 border-2 border-cyan-400/30 hover:border-cyan-400 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 hover:scale-105 group backdrop-blur-md">
                 <div>
                     <!-- Visual Header Icon -->
-                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 group-hover:rotate-6 transition-transform">
+                    <div class="w-14 h-14 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-cyan-500/20 group-hover:rotate-6 transition-transform">
                         <!-- Custom SVG logic gate or circuit -->
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <rect x="3" y="3" width="7" height="7" rx="1.5" />
                             <rect x="14" y="14" width="7" height="7" rx="1.5" />
                             <path d="M10 6.5h4v7" />
@@ -106,13 +111,40 @@
                         </svg>
                     </div>
                     
-                    <h2 class="text-2xl md:text-3xl font-black heading-font text-cyan-300 mb-3">Interactive Electronics Lab</h2>
-                    <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
-                        Explore logic gates, diodes, transistors, or build custom circuits! Power up devices and watch current map out on your workspace.
+                    <h2 class="text-xl md:text-2xl font-black heading-font text-cyan-300 mb-2">Interactive Electronics Lab</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        Explore logic gates, diodes, and fundamental circuit networks! Power up devices and watch current map out on your workspace.
                     </p>
                 </div>
                 
-                <a href="electronics.html" class="w-full py-4 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-center rounded-2xl shadow-xl transition-all hover:shadow-cyan-500/30 transform hover:translate-y-[-2px] tracking-wider heading-font">
+                <a href="electronics.html" class="w-full py-3.5 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-center rounded-2xl shadow-xl transition-all hover:shadow-cyan-500/30 transform hover:translate-y-[-2px] tracking-wider heading-font">
+                    LAUNCH LAB 🚀
+                </a>
+            </div>
+
+            <!-- Card 3: Transistor Lab -->
+            <div class="floating-card-extra bg-slate-900/90 border-2 border-pink-400/30 hover:border-pink-400 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 hover:scale-105 group backdrop-blur-md">
+                <div>
+                    <!-- Visual Header Icon (Transistor schematic) -->
+                    <div class="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-pink-500/20 group-hover:rotate-6 transition-transform">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <!-- Base block -->
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="8" y1="12" x2="12" y2="12" />
+                            <!-- Collector and Emitter legs -->
+                            <path d="M12 8l7-4M12 16l7 4" />
+                            <!-- Arrow pointer for NPN emitter -->
+                            <polygon points="17,19 19,20 18,17" fill="currentColor" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-xl md:text-2xl font-black heading-font text-pink-300 mb-2">Transistor Explorer Lab</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        Master <span class="text-yellow-300 font-bold">NPN & PNP</span> actions! Understand current amplification and design automatic switches using LDR and thermistor sensors.
+                    </p>
+                </div>
+                
+                <a href="transistor.html" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-slate-950 font-black text-center rounded-2xl shadow-xl transition-all hover:shadow-pink-500/30 transform hover:translate-y-[-2px] tracking-wider heading-font">
                     LAUNCH LAB 🚀
                 </a>
             </div>
@@ -120,7 +152,7 @@
         </main>
 
         <!-- Quick Classroom Joke & Interaction Panel -->
-        <div class="mt-12 max-w-2xl mx-auto w-full bg-slate-800/50 border border-slate-700/50 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-md">
+        <div class="mt-12 max-w-4xl mx-auto w-full bg-slate-800/50 border border-slate-700/50 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-md">
             <div class="text-center md:text-left flex-1">
                 <h4 class="font-bold text-yellow-300 heading-font mb-1">⚡ Daily Electric Pun!</h4>
                 <p id="pun-box" class="text-slate-300 italic text-sm md:text-base">"What is a conductor's favorite type of music? Heavy Metal!"</p>
@@ -143,7 +175,8 @@
     </div>
 
     <!-- Footer -->
-    <footer class="relative z-10 w-full text-center py-6 text-slate-500 text-xs border-t border-slate-800/40 bg-slate-950/20 backdrop-blur-xs">
+    <footer class="relative z-10 w-full text-center py-6 text-slate-500 text-xs border-t border-slate-800/40 bg-slate-950/20 backdrop-blur-xs flex flex-col gap-1 items-center">
+        <p class="font-bold text-slate-400">PHYSICS DEPT MRSM GERIK</p>
         <p>© 2026 Physics Spark Lab • Made with love for science students around the world ❤️</p>
     </footer>
 
@@ -202,7 +235,7 @@
                 progress: 0,
                 speed: 0.005 + Math.random() * 0.01,
                 size: 2 + Math.random() * 3,
-                color: Math.random() > 0.5 ? '#38bdf8' : '#eab308'
+                color: Math.random() > 0.5 ? '#38bdf8' : '#facc15'
             });
         }
 
@@ -237,7 +270,6 @@
                 const p = particles[i];
                 p.progress += p.speed;
 
-                // Cubic easing for nice velocity changes
                 const eased = p.progress; 
                 p.x = p.startX + (p.targetX - p.startX) * eased;
                 p.y = p.startY + (p.targetY - p.startY) * eased;
@@ -333,5 +365,3 @@
     </script>
 </body>
 </html>
-
-```
